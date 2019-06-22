@@ -1,2 +1,2 @@
-# Generic_template
-Generic_template
+# An Ethereum based POC to demonstrate supply Chain.
+
