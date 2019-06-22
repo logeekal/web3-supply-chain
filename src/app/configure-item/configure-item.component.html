@@ -1,0 +1,357 @@
+<div id="accordion">
+  <!--------------------------Product Configuration------------------------------------------>
+  <div class="card">
+    <div class="card-header" id="headingOne">
+      <h5 class="mb-0">
+        <button class="btn btn-link" data-toggle="collapse" data-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+          Configuration
+        </button>
+      </h5>
+    </div>
+
+    <div id="collapseOne" class="collapse show" aria-labelledby="headingOne" data-parent="#accordion">
+      <div class="card-body">
+        <div class="row mb-2">
+          <div class="col-sm-4">
+            <span>Warranty: </span>
+
+            <select [(ngModel)]="OrderWarranty">
+              <option *ngFor="let c of Warranties" [ngValue]="c">{{c.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-sm-4">
+            <span>External Battery: </span>
+
+            <input type="checkbox" [(ngModel)]="NeedBattery" />
+            <select [(ngModel)]="OrderBattery" [hidden]="!NeedBattery">
+              <option *ngFor="let c of Batteries" [ngValue]="c">{{c.name}}</option>
+            </select>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-sm-4">
+            <span>Network Card: </span>
+
+            <input type="checkbox" [(ngModel)]="OrderNetworkCard" />
+          </div>
+        </div>
+        <div class="row mb-2">
+          <div class="col-sm-2">
+            <h6 class="float-left">Order Total:</h6>
+          </div>
+          <div class="col-sm-2">
+            <h6 style="color:darkred">{{Price | currency:'USD':'symbol-narrow':'3.2'}} </h6>
+          </div>
+          <br />
+        </div>
+        <div class="row mb-2">
+          <div class="col-sm-4">
+            <button class="btn btn-primary float-left" data-toggle="collapse" data-target="#collapseTwo">
+              Continue
+            </button>
+          </div>
+          <div class="col-xs-4">
+            <button class="btn btn-warning float-left"
+                    (click)="FillUPS()" [hidden]="!infoShareService.ShowQuickFill">
+              Quick Fill
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--------------------------Payment Information-----------------------------------------
+  -->
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+          Payment Information
+        </button>
+      </h5>
+    </div>
+    <div id="collapseTwo" class="collapse multi-collapse" aria-labelledby="headingTwo" data-parent="#accordion">
+      <div class="card-body">
+        <div class="row mb-2">
+          <form class="card col-5">
+            <div class="form-row">
+
+              <div class="col-sm-3">
+                <label class="col-form-label float-right" for="CCNumber">Card Number</label>
+              </div>
+
+              <input type="text" class="form-control col-sm-9 mb-1" name="CCNumber" id="CCNumber" mask='0000 0000 0000 0000' [(ngModel)]="CustomerPaymentInfo.CCNumber" />
+
+              <div class="col-sm-3">
+                <label class="col-form-label float-right" for="NameOnCard">Name on Card</label>
+              </div>
+              <input type="text" class="form-control col-sm-9 mb-1" name="NameOnCard" id="NameOnCard" [(ngModel)]="CustomerPaymentInfo.NameOnCard" />
+
+              <div class="col-sm-3">
+                <label class="col-form-label float-right" for="City2">Expiration Date</label>
+              </div>
+              <select [(ngModel)]="CustomerPaymentInfo.ExpirationMonth" class="form-control col-sm-3 mb-1" name="ExpirationMonth">
+                <option *ngFor="let c of Months" [ngValue]="c">{{c.name}}</option>
+              </select>
+              <div class="col-sm-1"></div>
+              <select [(ngModel)]="CustomerPaymentInfo.ExpirationYear" class="form-control col-sm-3 mb-1" name="ExpirationYear">
+                <option *ngFor="let c of Years" [ngValue]="c">{{c.name}}</option>
+              </select>
+              <div class="col-sm-2"></div>
+
+              <div class="col-sm-3">
+                <label class="col-form-label float-right" for="SecurityCode">Security Code</label>
+              </div>
+              <input type="text" class="form-control col-sm-3 mb-1" name="SecurityCode" id="SecurityCode" mask='000' [(ngModel)]="CustomerPaymentInfo.SecurityCode" />
+              
+            </div>
+          </form>
+        </div>
+        <div class="row mb-2">
+          <div class="col-sm-4">
+            <button class="btn btn-primary float-left" data-toggle="collapse" data-target="#collapse3">
+              Continue
+            </button>
+          </div>
+          <div class="col-sm-4">
+            <button class="btn btn-warning float-left"
+                    (click)="FillPayment()" [hidden]="!infoShareService.ShowQuickFill">
+              Quick Fill
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--------------------------Address Info---------------------------------------
+  ---->
+  <div class="card">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse3" aria-expanded="false" aria-controls="collapse3">
+          Shipping and Billing Address
+        </button>
+      </h5>
+    </div>
+    <div id="collapse3" class="collapse multi-collapse" aria-labelledby="heading3" data-parent="#accordion">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-7">
+            <div class="float-right">
+              <span>Use Shipping Address </span>
+
+              <input type="checkbox" [(ngModel)]="UseShippingAddress" (change)="ChangeShippingAddress($event)"/>
+            </div>
+          </div>
+        </div>
+        <div class="row mb-2">
+          <form class="card col-5">
+            <div class="card-header mb-1" id="headingship">
+              <h5>
+                Shipping
+              </h5>
+            </div>
+            <div class="form-row">
+
+              <div class="col-sm-3">
+                <label class="col-form-label float-right" for="name">Send To</label>
+              </div>
+              <input type="text" class="form-control col-sm-9 mb-1" name="name" id="name" [(ngModel)]="ShippingAddress.SendTo"
+                     (blur)="onSendToBlur()"/>
+
+              <div class="col-sm-3">
+                <label class="col-form-label float-right" for="Street">Street</label>
+              </div>
+              <input type="text" class="form-control col-sm-9 mb-1" name="Street" id="Street" [(ngModel)]="ShippingAddress.Street"
+                     (blur)="onStreetBlur()"/>
+
+              <div class="col-sm-3">
+                <label class="col-form-label float-right" for="City">City</label>
+              </div>
+              <input type="text" class="form-control col-sm-9 mb-1" name="City" id="City" [(ngModel)]="ShippingAddress.City"
+                     (blur)="onCityBlur()"/>
+
+              <div class="col-sm-3">
+                <label class="col-form-label float-right" for="State">State/Province</label>
+              </div>
+              <input type="text" class="form-control col-sm-9 mb-1" name="State" id="State" [(ngModel)]="ShippingAddress.StateProvince"
+                     (blur)="onStateBlur()"/>
+
+              <div class="col-sm-3">
+                <label class="col-form-label float-right" for="Zip">Zip/Postal Code</label>
+              </div>
+              <input type="text" class="form-control col-sm-9 mb-1" name="Zip" id="Zip" [(ngModel)]="ShippingAddress.ZipPostalCode"
+                     (blur)="onZipBlur()"/>
+
+              <div class="col-sm-3">
+                <label class="col-form-label float-right" for="Country">Country</label>
+              </div>
+              <input type="text" class="form-control col-sm-9 mb-1" name="Country" id="Country" [(ngModel)]="ShippingAddress.Country"
+                     (blur)="onCountryBlur()"/>
+
+            </div>
+          </form>
+          <form class="card col-5">
+            <div class="card-header mb-1" id="headingship">
+              <h5 class="">
+                Billing
+              </h5>
+            </div>
+            <div class="form-row">
+
+              <div class="col-sm-3">
+                <label class="col-form-label float-right" for="name2">Send To</label>
+              </div>
+              <input type="text" class="form-control col-sm-9 mb-1" name="name2" id="name2" [disabled]="UseShippingAddress" [(ngModel)]="BillingAddress.SendTo" />
+
+              <div class="col-sm-3">
+                <label class="col-form-label float-right" for="Street2">Street</label>
+              </div>
+              <input type="text" class="form-control col-sm-9 mb-1" name="Street2" id="Street2" [disabled]="UseShippingAddress" [(ngModel)]="BillingAddress.Street" />
+
+              <div class="col-sm-3">
+                <label class="col-form-label float-right" for="City2">City</label>
+              </div>
+              <input type="text" class="form-control col-sm-9 mb-1" name="City2" id="City2" [disabled]="UseShippingAddress" [(ngModel)]="BillingAddress.City" />
+
+              <div class="col-sm-3">
+                <label class="col-form-label float-right" for="State2">State/Province</label>
+              </div>
+              <input type="text" class="form-control col-sm-9 mb-1" name="State2" id="State2" [disabled]="UseShippingAddress" [(ngModel)]="BillingAddress.StateProvince" />
+
+              <div class="col-sm-3">
+                <label class="col-form-label float-right" for="Zip2">Zip/Postal Code</label>
+              </div>
+              <input type="text" class="form-control col-sm-9 mb-1" name="Zip2" id="Zip2" [disabled]="UseShippingAddress" [(ngModel)]="BillingAddress.ZipPostalCode" />
+
+              <div class="col-sm-3">
+                <label class="col-form-label float-right" for="Country2">Country</label>
+              </div>
+              <input type="text" class="form-control col-sm-9 mb-1" name="Country2" id="Country2" [disabled]="UseShippingAddress" [(ngModel)]="BillingAddress.Country" />
+
+            </div>
+          </form>
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <button class="btn btn-primary float-left" (click)="ReviewOrder()" data-toggle="collapse" data-target="#collapse4">
+              Review Order
+            </button>
+          </div>
+          <div class="col-sm-4">
+            <button class="btn btn-warning float-left"
+                    (click)="FillShippingAddress()" [hidden]="!infoShareService.ShowQuickFill">
+              Quick Fill
+            </button>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--------------------------
+  Review Order
+  ----------------------------------------
+  -->
+  <div class="card" [hidden]="!ShowReview">
+    <div class="card-header" id="headingTwo">
+      <h5 class="mb-0">
+        <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapse4" aria-expanded="false" aria-controls="collapse4">
+          Review
+        </button>
+      </h5>
+    </div>
+    <div id="collapse4" class="collapse multi-collapse" aria-labelledby="heading4" data-parent="#accordion">
+      <div class="card-body">
+        <div class="row mb-2">
+          <div class="card col-12">
+            <div class="card-header mb-1">
+              <h6>
+                Order Summary
+              </h6>
+            </div>
+            <div class="card-body">
+              <div class="row">
+                <div class="col-sm-6 border">
+                  <div class="panel col-sm-12">
+                    <div class="col-sm-12">
+                      <label for="confnum">Confirmation Code -</label>
+                      <span name="confnum">{{ConfirmationCode}}</span>
+                    </div>
+                    <div class="col-sm-12">
+                      <label for="custname">Customer Name -</label>
+                      <span name="custname">{{infoShareService?.Customer?.Name}}</span>
+                    </div>
+
+                    <div class="col-sm-12">
+                      <label for="warranty">Warranty -</label>
+                      <span name="warranty">{{OrderWarranty?.name}}</span>
+                    </div>
+                    <div class="col-sm-12">
+                      <label for="batteries">Batteries -</label>
+                      <span name="batteries">{{OrderBattery?.name}}</span>
+                    </div>
+                    <div class="col-sm-12">
+                      <label for="networkcard">Network Card -</label>
+                      <span name="networkcard">{{OrderNetworkCard == true ? 'Yes' : 'No'}}</span>
+                    </div>
+                    <div class="col-sm-12">
+                      <label for="ot">Order Total -</label>
+                      <span name="ot">{{Price | currency:'USD':'symbol-narrow':'3.2'}}</span>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-6 border">
+                  <div class="panel col-sm-12">
+                    <div class="col-sm-12">
+                      <label for="cc">Last 4 digits of CC -</label>
+                      <span name="cc">{{CustomerPaymentInfo.CCNumber | slice:-4}}</span>
+                    </div>
+                    <div class="col-sm-12">
+                      <label for="name">Est. Date of Arrival -</label>
+                      <span name="name">{{EstDateOfArrival| date:'shortDate'}}</span>
+                    </div>
+                    <div class="col-sm-12">
+                      <label for="name">Send To -</label>
+                      <span name="name">{{ShippingAddress.SendTo}}</span>
+                    </div>
+                    <div class="col-sm-12">
+                      <label for="street">Street -</label>
+                      <span name="street">{{ShippingAddress.Street}}</span>
+                    </div>
+                    <div class="col-sm-12">
+                      <label for="street">City -</label>
+                      <span name="street">{{ShippingAddress.City}}</span>
+                    </div>
+                    <div class="col-sm-12">
+                      <label for="street">State -</label>
+                      <span name="street">{{ShippingAddress.StateProvince}}</span>
+                    </div>
+                    <div class="col-sm-12">
+                      <label for="zip">Zip/Postal Code -</label>
+                      <span name="zip">{{ShippingAddress.ZipPostalCode}}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-4">
+            <button class="btn btn-primary float-left" (click)="ConfirmOrder()" style="min-width:125px" [hidden]="OrderConfirmed">
+              Confirm Order
+            </button>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-sm-12">
+            <span [hidden]="!infoShareService.ShowQuickFill">{{theJson}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

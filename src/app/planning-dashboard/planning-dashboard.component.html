@@ -1,0 +1,62 @@
+<ngx-loading [show]="loading"
+             [config]="{ backdropBorderRadius: '3px' }"></ngx-loading>
+<div class='container-fluid'>
+  <div class='row border card'>
+    <div class="card-header">
+      Asset Activity
+      <!--<button class="btn btn-primary" (click)="RunSpinner()">Click to spin</button>-->
+    </div>
+    <div class="card-body">
+      <div class="col-sm-12">
+        <label for="timespan">Time Range: </label>
+        <select [(ngModel)]="SelectedTimespan" class="mb-1 mt-2" name="timespan">
+          <option *ngFor="let c of Timespans" [ngValue]="c">{{c.name}}</option>
+        </select>
+        <button class="btn btn-primary" (click)="SearchOrders()">Search</button>
+      </div>
+      <div class="col-sm-12">
+
+
+        <!--<div class="col-sm-3">
+
+  </div>
+  <div class="col-sm-3">
+
+  </div>
+  <div class="col-sm-3">
+
+  </div>
+  <div class="col-sm-3">
+
+  </div>-->
+      </div>
+    </div>
+  </div>
+  <div class='row border card'>
+    <div class="card-header">
+      Details
+    </div>
+    <div class="card-body">
+      <div class="col-sm-12">
+        <ngx-datatable class="bootstrap"
+                      [sorts]="sorting"
+                      [rows]="rows"
+                      [columns]="columns"
+                      [columnMode]="'force'"
+                      [headerHeight]="50"
+                      [footerHeight]="50"
+                      [rowHeight]="auto"
+                      [selected]="selected"
+                      [selectionType]="'checkbox'"
+                      [limit]="10"
+                      (select) = 'onRowSelect($event)'
+                     >    
+        </ngx-datatable>
+      </div>
+      <br/>
+      <button class="btn btn-primary col-sm-12" (click) = "changeStatus()">Acknowledge Order</button>
+      
+    </div>
+  </div>
+  
+</div>
